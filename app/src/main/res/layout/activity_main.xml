@@ -3,16 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <!--
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="" />
-    -->
+
     <CheckBox android:id="@+id/checkbox_cheese"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ativar serviço de acelerômetro"/>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/seekBar1"
+        android:layout_marginLeft="29dp"
+        android:layout_marginTop="14dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:min="0"
+        android:progress="7"
+        android:max="20" />
+
+
+
 
 </LinearLayout>

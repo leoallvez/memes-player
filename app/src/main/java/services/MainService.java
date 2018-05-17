@@ -2,6 +2,7 @@ package services;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,6 +12,7 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import br.com.memesplayer.R;
+import br.com.memesplayer.activitys.MainActivity;
 
 public class MainService extends Service {
 
@@ -18,12 +20,15 @@ public class MainService extends Service {
     private MediaPlayer mediaPlayer;
     private SensorEventListener listen;
     private SensorManager sensorManager;
+    public SharedPreferences prefs;
+
 
     @Override
     public IBinder onBind(Intent intent) { return null; }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        prefs = getSharedPreferences(MainActivity.MY_PREFS_NAME, MODE_PRIVATE);
 
         sensorManager = (SensorManager) getApplicationContext()
                 .getSystemService(SENSOR_SERVICE);
@@ -45,6 +50,8 @@ public class MainService extends Service {
 
     private void getAccelerometer(SensorEvent event) {
         float[] values = event.values;
+
+        int value = prefs.getInt("seebar_value", 0);
         // Movement
         float x = values[0];
         float y = values[1];
@@ -53,16 +60,14 @@ public class MainService extends Service {
         float accelationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
         long actualTime = System.currentTimeMillis();
-        if (accelationSquareRoot >= 7)
+        if (accelationSquareRoot >= value)
         {
             if (actualTime - lastUpdate < 2000) {
                 return;
             }
 
             lastUpdate = actualTime;
-            Toast.makeText(this,
-                    "Device was shuffed _ " + accelationSquareRoot,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Device was shuffed _ " + accelationSquareRoot + "seebar_value " + value, Toast.LENGTH_SHORT).show();
 
             mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nervoso);
             mediaPlayer.start();
