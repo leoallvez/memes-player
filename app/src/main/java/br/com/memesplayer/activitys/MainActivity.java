@@ -5,93 +5,37 @@ import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
+import br.com.memesplayer.R;
 import services.MainService;
 
-public class MainActivity extends AppCompatActivity  /**implements SensorEventListener */{
+public class MainActivity extends AppCompatActivity {
 
-    private SensorManager sensorManager;
-    private boolean color = false;
-    private View view;
-    private long lastUpdate;
+    private CheckBox checkBox;
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        /**
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
-        setContentView(R.layout.activity_main);
-        view = findViewById(R.id.textView);
-        view.setBackgroundColor(Color.GREEN);
-        **/
         super.onCreate(savedInstanceState);
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        lastUpdate = System.currentTimeMillis();
+        setContentView(R.layout.activity_main);
+        checkBox = (CheckBox) findViewById(R.id.checkbox_cheese);
 
-        startService(new Intent(this, MainService.class));
-    }
-    /**
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            getAccelerometer(event);
-        }
-    }
-
-    private void getAccelerometer(SensorEvent event) {
-        float[] values = event.values;
-        // Movement
-        float x = values[0];
-        float y = values[1];
-        float z = values[2];
-
-        float accelationSquareRoot = (x * x + y * y + z * z)
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        long actualTime = event.timestamp;
-        if (accelationSquareRoot >= 3) //
-        {
-            if (actualTime - lastUpdate < 200) {
-                return;
+        checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //is checkBox checked?
+                if (((CheckBox) v).isChecked()) {
+                    startService(new Intent(MainActivity.this, MainService.class));
+                    Toast.makeText(MainActivity.this,
+                            "Serviço ativado :)", Toast.LENGTH_LONG).show();
+                }else{
+                    stopService(new Intent(MainActivity.this, MainService.class));
+                    Toast.makeText(MainActivity.this,
+                            "Serviço desativado :(", Toast.LENGTH_LONG).show();
+                }
             }
-
-            lastUpdate = actualTime;
-
-            Toast.makeText(this, "Device was shuffed", Toast.LENGTH_SHORT).show();
-
-            if (color) {
-                view.setBackgroundColor(Color.GREEN);
-            } else {
-                view.setBackgroundColor(Color.RED);
-            }
-            color = !color;
-        }
+        });
     }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // register this class as a listener for the orientation and
-        // accelerometer sensors
-        sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        // unregister listener
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-    */
 }
