@@ -1,4 +1,4 @@
-package services;
+package br.com.memesplayer.services;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,19 +9,18 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.widget.Toast;
-
 import br.com.memesplayer.R;
 import br.com.memesplayer.activitys.MainActivity;
+import br.com.memesplayer.interfaces.IAccelerometer;
+import br.com.memesplayer.models.SensorListen;
 
-public class MainService extends Service {
+public class MainService extends Service implements IAccelerometer {
 
     private long lastUpdate;
     private MediaPlayer mediaPlayer;
     private SensorEventListener listen;
     private SensorManager sensorManager;
     public SharedPreferences prefs;
-
 
     @Override
     public IBinder onBind(Intent intent) { return null; }
@@ -33,7 +32,7 @@ public class MainService extends Service {
         sensorManager = (SensorManager) getApplicationContext()
                 .getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
-        listen = new SensorListen();
+        listen = new SensorListen(this);
 
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorManager.registerListener(listen, accel, SensorManager.SENSOR_DELAY_NORMAL);
@@ -43,12 +42,11 @@ public class MainService extends Service {
 
     @Override
     public void onCreate() {
-        // TODO Auto-generated method stub
-        Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
         super.onCreate();
     }
 
-    private void getAccelerometer(SensorEvent event) {
+    @Override
+    public void getAccelerometer(SensorEvent event) {
         float[] values = event.values;
 
         int value = prefs.getInt("seebar_value", 0);
@@ -67,8 +65,6 @@ public class MainService extends Service {
             }
 
             lastUpdate = actualTime;
-            Toast.makeText(this, "Device was shuffed _ " + accelationSquareRoot + "seebar_value " + value, Toast.LENGTH_SHORT).show();
-
             mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.nervoso);
             mediaPlayer.start();
         }
@@ -76,23 +72,7 @@ public class MainService extends Service {
 
     @Override
     public void onDestroy() {
-        // TODO Auto-generated method stub
         sensorManager.unregisterListener(listen);
-        Toast.makeText(this, "Destroy", Toast.LENGTH_SHORT).show();
         super.onDestroy();
-    }
-
-    public class SensorListen implements SensorEventListener {
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                getAccelerometer(event);
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     }
 }
