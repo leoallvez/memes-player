@@ -19,7 +19,7 @@
         </activity>
 
         <service
-            android:name="services.MainService"
+            android:name=".services.MainService"
             android:enabled="true"
             android:exported="true">
         </service>

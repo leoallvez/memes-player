@@ -9,12 +9,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.widget.Toast;
+
 import br.com.memesplayer.R;
 import br.com.memesplayer.activitys.MainActivity;
 import br.com.memesplayer.interfaces.IAccelerometer;
 import br.com.memesplayer.models.SensorListen;
 
-public class MainService extends Service implements IAccelerometer {
+public class MainService extends Service implements IAccelerometer{
 
     private long lastUpdate;
     private MediaPlayer mediaPlayer;

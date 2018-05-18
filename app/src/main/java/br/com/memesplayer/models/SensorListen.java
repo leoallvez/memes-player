@@ -18,7 +18,7 @@ public class SensorListen implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
 
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            accelerometer.getAccelerometer(event);
+            this.accelerometer.getAccelerometer(event);
         }
     }
 
